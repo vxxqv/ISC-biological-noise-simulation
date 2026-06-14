@@ -1,39 +1,40 @@
 import matplotlib.pyplot as plt
 
-
-data = {
-    'P-INSR': {'measurements': [0.4719, 0.9283, 0.5108], 'avg': 0.6370},
-    'P-IRS1': {'measurements': [0.9672, 0.7782, 0.7850], 'avg': 0.8435},
-    'PIK3CA': {'measurements': [0.6399, 0.9487, 0.9298], 'avg': 0.8395},
-    'P-AKT1': {'measurements': [0.9838, 0.7964, 0.5853], 'avg': 0.7885}
-}
-
+proteins = ['P-INSR', 'P-IRS1', 'PIK3CA', 'P-AKT1']
 trials = ['Noise 1', 'Noise 2', 'Noise 3']
 
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.size'] = 11
+plt.rcParams['axes.linewidth'] = 1.2
 
-for protein, values in data.items():
+for protein in proteins:
+    print(f"\n--- Enter data for {protein} ---")
+    avg = float(input(f"Enter {protein} Average PAS: "))
+    m1 = float(input(f"Enter {protein} Noise 1 value: "))
+    m2 = float(input(f"Enter {protein} Noise 2 value: "))
+    m3 = float(input(f"Enter {protein} Noise 3 value: "))
+    measurements = [m1, m2, m3]
+    
     fig, ax = plt.subplots(figsize=(6, 4))
     
-   
-    ax.axhline(y=values['avg'], color='#d62728', linestyle='-', linewidth=2, label=f'Average PAS ({values["avg"]})')
+    ax.axhline(y=avg, color='#d62728', linestyle='-', linewidth=2, label=f'Average PAS ({avg})')
+    ax.scatter(trials, measurements, color='#1f77b4', s=100, zorder=3, label='Individual Trials')
     
-    
-    ax.scatter(trials, values['measurements'], color='#1f77b4', s=100, zorder=3, label='Individual Trials')
-    
-    
-    for i, val in enumerate(values['measurements']):
+    for i, val in enumerate(measurements):
         ax.vlines(trials[i], ymin=0, ymax=val, colors='#1f77b4', linestyles='dashed', alpha=0.7)
         
-    
     ax.set_title(f'{protein} Stochastic Fluctuation Profile', fontweight='bold', pad=12)
     ax.set_ylabel('Pathway Activation Score (PAS)')
     ax.set_xlabel('Simulation Run')
-    ax.set_ylim(0, 1.2)  
+    
+    max_val = max(max(measurements), avg)
+    ax.set_ylim(0, max_val * 1.2)
+    
     ax.grid(axis='y', linestyle=':', alpha=0.5)
     ax.legend(loc='lower left')
     
     plt.tight_layout()
     plt.savefig(f'{protein}_drop_line_plot.png', dpi=300)
     plt.close()
-
-print("All 4 plots generated and saved to project folder successfully.")
+    
+    print(f"Successfully generated and saved {protein}_drop_line_plot.png")
