@@ -1,0 +1,3 @@
+Please enter this into your terminal before running the program:
+
+pip install matplotlib scipy numpy
